@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SPACE MISSION – PETUALANGAN LUAR ANGKASA</title>
+<style>
+:root{--cyan:#62f4ff;--pink:#ff62c7;--gold:#ffd76a;--ink:#090d2a;--panel:rgba(15,22,63,.88)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:#050719;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;overflow-x:hidden}
+button,input{font:inherit}
+button{cursor:pointer;border:0}
+#stars{position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse at 15% 20%,#27206c 0,transparent 34%),radial-gradient(ellipse at 85% 75%,#34104d 0,transparent 35%),linear-gradient(135deg,#050719,#10163b 55%,#09091f)}
+#stars:before,#stars:after{content:"";position:absolute;inset:-50%;background-image:radial-gradient(2px 2px at 20px 30px,#fff,transparent),radial-gradient(1px 1px at 90px 80px,#9beaff,transparent),radial-gradient(2px 2px at 150px 160px,#fff,transparent),radial-gradient(1px 1px at 220px 40px,#ffb7ef,transparent);background-size:260px 220px;animation:drift 65s linear infinite;opacity:.65}
+#stars:after{transform:scale(1.4);animation-duration:95s;opacity:.35}
+@keyframes drift{to{transform:translate3d(180px,220px,0)}}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px clamp(12px,3vw,34px);background:rgba(5,8,30,.78);border-bottom:1px solid #ffffff20;backdrop-filter:blur(12px);position:sticky;top:0;z-index:10}
+.brand{font-weight:900;letter-spacing:1px;color:var(--cyan);font-size:clamp(14px,2vw,20px);text-shadow:0 0 16px #36eaff66}
+.navstats{display:flex;gap:9px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.pill{padding:7px 12px;border:1px solid #ffffff25;border-radius:30px;background:#ffffff0d;font-size:13px}
+.pill strong{color:var(--gold)}
+main{width:min(1100px,94vw);margin:22px auto 42px}
+.screen{display:none}.screen.active{display:block}
+.panel{background:var(--panel);border:1px solid #8d9cff45;border-radius:24px;box-shadow:0 20px 70px #0008, inset 0 1px #ffffff16;padding:clamp(18px,4vw,34px);backdrop-filter:blur(14px)}
+.hero{text-align:center;max-width:760px;margin:5vh auto}
+.eyebrow{color:var(--cyan);font-weight:800;letter-spacing:3px;font-size:12px}
+h1{font-size:clamp(30px,6vw,58px);line-height:1.04;margin:12px 0;color:#fff;text-shadow:0 0 22px #6b60ff88}
+.gradient{background:linear-gradient(90deg,#6ff7ff,#c49aff,#ff7bd2);-webkit-background-clip:text;background-clip:text;color:transparent}
+.subtitle{color:#cbd4ff;line-height:1.65}
+.field{display:block;text-align:left;max-width:390px;margin:22px auto 12px;color:#dce4ff;font-weight:700}
+input{width:100%;margin-top:8px;padding:14px 16px;border-radius:13px;border:1px solid #7182d9;background:#080e31;color:#fff;outline:none}
+input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #62f4ff22}
+.btn{padding:13px 21px;border-radius:13px;color:#07112d;font-weight:900;background:linear-gradient(135deg,#69f5ff,#a7a1ff);box-shadow:0 7px 24px #55e9ff30;transition:.18s transform,.18s filter}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.1)}
+.btn.secondary{background:#ffffff12;color:#e8edff;border:1px solid #ffffff35;box-shadow:none}
+.btn.pink{background:linear-gradient(135deg,#ff78d0,#a68cff)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.rocket{font-size:clamp(72px,12vw,120px);filter:drop-shadow(0 0 25px #68dfff);animation:float 3s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-13px) rotate(3deg)}}
+.featuregrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:24px auto;max-width:650px}
+.feature{padding:12px 8px;background:#ffffff0b;border:1px solid #ffffff18;border-radius:14px;font-size:13px;color:#d9e1ff}
+.feature b{display:block;color:var(--cyan);font-size:19px;margin-bottom:4px}
+.gamehead{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.missionlabel{font-weight:900;color:var(--gold)}
+.progress{height:10px;background:#ffffff16;border-radius:20px;overflow:hidden;margin:10px 0 18px}
+.progress>div{height:100%;width:0;background:linear-gradient(90deg,#5af4ff,#bc8bff,#ff72c9);transition:width .4s}
+.stage{position:relative;height:clamp(330px,55vw,510px);overflow:hidden;border-radius:22px;border:1px solid #8ca2ff66;background:radial-gradient(ellipse at 50% 110%,#293c85 0,transparent 55%),linear-gradient(180deg,#090e31,#151344 65%,#090d2a);box-shadow:inset 0 0 60px #050718}
+.stage:before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:7%;top:9%;background:radial-gradient(circle at 30% 28%,#fff2c6,#dc7d93 25%,#7b3e9e 60%,#30215d);box-shadow:0 0 45px #bb75ff55;opacity:.8}
+.stage:after{content:"";position:absolute;width:100%;height:100%;background-image:radial-gradient(2px 2px at 15% 22%,#fff,transparent),radial-gradient(1px 1px at 60% 30%,#fff,transparent),radial-gradient(2px 2px at 82% 62%,#b5faff,transparent),radial-gradient(1px 1px at 40% 72%,#fff,transparent);pointer-events:none}
+.questionbox{position:absolute;z-index:4;top:14px;left:50%;transform:translateX(-50%);width:min(90%,650px);padding:13px 18px;text-align:center;background:#080d2be8;border:1px solid #9daeff66;border-radius:16px;box-shadow:0 8px 25px #0007}
+.questionbox small{color:var(--cyan);font-weight:900;letter-spacing:1.4px}
+.question{font-size:clamp(18px,3vw,26px);font-weight:900;margin:4px 0}
+.level{color:#cbd3ff;font-size:12px}
+.asteroid{position:absolute;z-index:3;width:clamp(74px,11vw,102px);height:clamp(74px,11vw,102px);border-radius:38% 48% 42% 50%;display:flex;align-items:center;justify-content:center;font-size:clamp(21px,3.5vw,30px);font-weight:1000;color:white;text-shadow:0 2px 6px #000;background:radial-gradient(circle at 32% 25%,#aab1cb,#646b91 35%,#343a65 72%,#171d43);border:2px solid #b9c5ff80;box-shadow:inset -8px -10px 14px #090d2d99,0 9px 18px #0008;cursor:pointer;transition:filter .15s}
+.asteroid:after{content:"";position:absolute;inset:-7px;border:1px dashed #a9b8ff55;border-radius:42%;animation:spin 12s linear infinite}
+.asteroid:hover{filter:brightness(1.3)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ship{position:absolute;z-index:5;left:50%;top:78%;transform:translate(-50%,-50%);font-size:54px;filter:drop-shadow(0 0 14px #55eaff);pointer-events:none;transition:left .07s linear,top .07s linear}
+.ship:after{content:"";display:block;width:14px;height:28px;margin:-2px auto 0;background:linear-gradient(#fff,#ff8d39,transparent);clip-path:polygon(30% 0,70% 0,100% 100%,0 100%);filter:blur(2px)}
+.feedback{position:absolute;z-index:7;left:50%;top:54%;transform:translate(-50%,-50%);font-size:clamp(21px,4vw,34px);font-weight:1000;text-align:center;text-shadow:0 3px 12px #000;background:#080d2bdc;border-radius:16px;padding:12px 22px;display:none}
+.feedback.show{display:block;animation:pop .3s ease}
+@keyframes pop{from{transform:translate(-50%,-50%) scale(.7)}to{transform:translate(-50%,-50%) scale(1)}}
+.controls{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.camrow{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px;color:#d6ddff;font-size:13px}
+.dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#ff647e;box-shadow:0 0 10px currentColor}
+.dot.on{background:#62ffad;color:#62ffad}
+#camVideo{position:fixed;right:12px;bottom:12px;width:130px;height:96px;object-fit:cover;border:2px solid #62f4ff;border-radius:12px;transform:scaleX(-1);z-index:20;display:none;background:#111}
+#camVideo.visible{display:block}
+.help{font-size:12px;color:#aeb9e8;text-align:center;line-height:1.5;margin:12px 0 0}
+.result{text-align:center;padding:25px 10px}
+.result .big{font-size:76px}
+.result h2{font-size:clamp(28px,5vw,44px);margin:8px}
+.result p{color:#d3dcff;line-height:1.6}
+.missionchips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:18px}
+.chip{border:1px solid #ffffff35;background:#ffffff0c;padding:9px 13px;border-radius:12px;color:#cdd6ff;font-size:13px}
+.chip.done{border-color:#59f5ba;color:#78ffc6;background:#2bff9b12}
+.chip.lock{opacity:.4}
+@media(max-width:600px){.topbar{align-items:flex-start}.brand{max-width:145px}.pill{font-size:11px;padding:6px 8px}.featuregrid{grid-template-columns:1fr}.stage{height:430px}.questionbox{top:10px}.ship{font-size:46px}#camVideo{width:100px;height:75px}}
+</style>
+</head>
+<body>
+<div id="stars"></div>
+<header class="topbar">
+  <div class="brand">🚀 SPACE MISSION</div>
+  <div class="navstats">
+    <span class="pill">👩‍🚀 Astronot: <strong id="navName">Belum masuk</strong></span>
+    <span class="pill">⭐ Skor: <strong id="navScore">0</strong></span>
+    <span class="pill">❤️ Nyawa: <strong id="navLives">5</strong></span>
+  </div>
+</header>
+<main>
+<section id="home" class="screen active">
+ <div class="panel hero">
+  <div class="eyebrow">UPT SDN SUMBERARUM • MISI PENYELAMATAN GALAKSI</div>
+  <div class="rocket">🚀</div>
+  <h1>SPACE MISSION<br><span class="gradient">PETUALANGAN LUAR ANGKASA</span></h1>
+  <p class="subtitle">Jadilah astronot hebat! Terbangkan pesawatmu, temukan asteroid jawaban, dan selamatkan galaksi dengan kemampuan berhitungmu.</p>
+  <label class="field">Nama astronot
+   <input id="studentName" maxlength="24" placeholder="Tulis nama lengkapmu..." autocomplete="given-name">
+  </label>
+  <button class="btn" id="startBtn">MULAI PETUALANGAN ✨</button>
+  <div class="featuregrid">
+   <div class="feature"><b>🪐 5 MISI</b>15 tantangan pengurangan</div>
+   <div class="feature"><b>🖐️ GESTURE</b>Kendalikan dengan tangan</div>
+   <div class="feature"><b>⌨️ KONTROL</b>Mouse dan keyboard</div>
+  </div>
+  <p class="help">Matematika • Pengurangan • Kelas 1 SD<br>Setiap jawaban benar bernilai 100 poin. Hati-hati, jawaban salah mengurangi 1 nyawa!</p>
+ </div>
+</section>
+
+<section id="game" class="screen">
+ <div class="panel">
+  <div class="gamehead">
+   <div><div class="eyebrow">PUSAT KENDALI ASTRONOT</div><div class="missionlabel" id="missionTitle">MISI 1 • PEMULA</div></div>
+   <div class="pill">Soal <strong id="questionCount">1 / 15</strong></div>
+  </div>
+  <div class="progress"><div id="progressFill"></div></div>
+  <div class="stage" id="stage">
+   <div class="questionbox">
+    <small id="category">LOTS • INGAT & PAHAMI</small>
+    <div class="question" id="questionText">10 − 3 = ...</div>
+    <div class="level" id="missionHint">Arahkan pesawat ke asteroid jawaban yang benar!</div>
+   </div>
+   <div id="asteroids"></div>
+   <div class="ship" id="ship">🚀</div>
+   <div class="feedback" id="feedback"></div>
+  </div>
+  <div class="camrow"><span class="dot" id="camDot"></span><span id="camStatus">Kamera belum aktif</span><button class="btn secondary" id="cameraBtn">🖐️ Aktifkan kamera</button><button class="btn secondary" id="stopCamBtn" disabled>Matikan kamera</button></div>
+  <div class="controls">
+   <button class="btn secondary" id="leftBtn">⬅️ Kiri</button>
+   <button class="btn secondary" id="upBtn">⬆️ Atas</button>
+   <button class="btn secondary" id="downBtn">⬇️ Bawah</button>
+   <button class="btn secondary" id="rightBtn">Kanan ➡️</button>
+  </div>
+  <p class="help">Gerakkan telapak tangan di depan kamera untuk menggerakkan pesawat. Alternatif: gunakan tombol panah / WASD atau gerakkan mouse di area permainan. Dekati asteroid untuk memilih jawaban.</p>
+ </div>
+</section>
+
+<section id="missionDone" class="screen">
+ <div class="panel result">
+  <div class="big">🌟</div><div class="eyebrow">MISI BERHASIL</div>
+  <h2 id="missionCongrats">Hebat, Astronot!</h2>
+  <p id="missionMessage">Kamu berhasil menyelesaikan misi.</p>
+  <div class="missionchips" id="missionChips"></div>
+  <button class="btn" id="nextMissionBtn">LANJUTKAN MISI 🚀</button>
+ </div>
+</section>
+<section id="victory" class="screen">
+ <div class="panel result">
+  <div class="big">🏆🌌</div><div class="eyebrow">GALAKSI BERHASIL DISELAMATKAN</div>
+  <h2 id="victoryName">Luar biasa, Astronot!</h2>
+  <p id="victoryText">Kamu telah menuntaskan seluruh misi pengurangan.</p>
+  <div class="featuregrid"><div class="feature"><b id="finalScore">1500</b>Total poin</div><div class="feature"><b>5 / 5</b>Misi selesai</div><div class="feature"><b>15 / 15</b>Soal dijawab</div></div>
+  <button class="btn pink" id="playAgainBtn">🔄 MAIN KEMBALI</button>
+ </div>
+</section>
+<section id="gameOver" class="screen">
+ <div class="panel result">
+  <div class="big">🛸💫</div><div class="eyebrow">PESAWAT PERLU DIISI ULANG</div>
+  <h2>Jangan menyerah!</h2><p id="gameOverText">Nyawamu habis. Coba lagi dan selamatkan galaksi!</p>
+  <button class="btn" id="retryBtn">COBA LAGI 🔁</button>
+ </div>
+</section>
+</main>
+<video id="camVideo" autoplay playsinline muted></video>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+<script>
+(() => {
+"use strict";
+const missions = [
+ {name:"MISI 1 • PEMULA",hint:"Pengurangan sederhana sampai 10",questions:[
+  {q:"7 − 2 = ...",a:5,o:[4,5,6],c:"LOTS • INGAT & PAHAMI"},
+  {q:"Ada 9 bintang. 3 bintang padam. Berapa yang masih bersinar?",a:6,o:[5,6,7],c:"MOTS • TERAPKAN"},
+  {q:"Raka punya 8 roket mainan. Ia memberikan beberapa kepada teman. Sekarang tersisa 5. Berapa roket yang diberikan?",a:3,o:[2,3,4],c:"HOTS • PECAHKAN MASALAH"}
+ ]},
+ {name:"MISI 2 • PENJELAJAH",hint:"Pengurangan dengan bilangan sampai 15",questions:[
+  {q:"12 − 4 = ...",a:8,o:[7,8,9],c:"LOTS • INGAT & PAHAMI"},
+  {q:"Ada 13 planet kecil. 5 sudah dijelajahi. Berapa yang belum dijelajahi?",a:8,o:[6,8,9],c:"MOTS • TERAPKAN"},
+  {q:"Mila memiliki 11 stiker bintang. Ia ingin tersisa 6. Berapa stiker yang harus diberikan?",a:5,o:[4,5,6],c:"HOTS • PECAHKAN MASALAH"}
+ ]},
+ {name:"MISI 3 • PENAKLUK ASTEROID",hint:"Pengurangan sampai 20",questions:[
+  {q:"16 − 6 = ...",a:10,o:[9,10,11],c:"LOTS • INGAT & PAHAMI"},
+  {q:"Pesawat membawa 18 energi. Sebanyak 7 energi dipakai. Berapa sisanya?",a:11,o:[10,11,12],c:"MOTS • TERAPKAN"},
+  {q:"Di luar angkasa ada 15 asteroid. 9 berhasil dihancurkan. Berapa lagi yang harus dihancurkan?",a:6,o:[5,6,7],c:"HOTS • ANALISIS"}
+ ]},
+ {name:"MISI 4 • PENJAGA GALAKSI",hint:"Tantangan pengurangan dan cerita",questions:[
+  {q:"19 − 8 = ...",a:11,o:[10,11,12],c:"LOTS • INGAT & PAHAMI"},
+  {q:"Ada 17 alien ramah. 9 masuk ke pesawat. Berapa alien yang masih di luar?",a:8,o:[7,8,9],c:"MOTS • TERAPKAN"},
+  {q:"Bahan bakar pesawat 20 liter. Setelah perjalanan tersisa 12 liter. Berapa liter yang telah digunakan?",a:8,o:[6,8,9],c:"HOTS • ANALISIS"}
+ ]},
+ {name:"MISI 5 • PAHLAWAN GALAKSI",hint:"Misi terakhir: gunakan semua kemampuanmu!",questions:[
+  {q:"20 − 9 = ...",a:11,o:[10,11,12],c:"LOTS • INGAT & PAHAMI"},
+  {q:"Ada 18 meteor. 6 meteor menjauh dan 4 meteor hancur. Berapa meteor yang tersisa?",a:8,o:[7,8,9],c:"MOTS • TERAPKAN"},
+  {q:"Naya punya 20 keping kristal. Ia memberikan sebagian. Jika tersisa 7, berapa kristal yang diberikan?",a:13,o:[12,13,14],c:"HOTS • PECAHKAN MASALAH"}
+ ]}
+];
+const $=id=>document.getElementById(id);
+const screens=["home","game","missionDone","victory","gameOver"];
+let name="",score=0,lives=5,mission=0,question=0,answered=0,shipX=50,shipY=78,choices=[],busy=false,mouseMode=false;
+let cameraStream=null,hands=null,mpCamera=null,cameraActive=false,animationFrame=null;
+function show(id){screens.forEach(s=>$(s).classList.toggle("active",s===id));}
+function stats(){$("navName").textContent=name||"Belum masuk";$("navScore").textContent=score;$("navLives").textContent=lives;}
+function startGame(){name=$("studentName").value.trim();if(!name){$("studentName").focus();$("studentName").placeholder="Nama astronot harus diisi!";return;}score=0;lives=5;mission=0;question=0;answered=0;stats();show("game");loadQuestion();}
+function loadQuestion(){
+ if(lives<=0){endGame();return;}
+ if(mission>=5){winGame();return;}
+ if(question>=3){completeMission();return;}
+ busy=false;
+ const q=missions[mission].questions[question];
+ $("missionTitle").textContent=missions[mission].name;
+ $("questionCount").textContent=(mission*3+question+1)+" / 15";
+ $("progressFill").style.width=((mission*3+question)/15*100)+"%";
+ $("category").textContent=q.c;$("questionText").textContent=q.q;$("missionHint").textContent=missions[mission].hint;
+ $("feedback").className="feedback";$("feedback").textContent="";
+ buildAsteroids(q);moveShip(50,78);
+}
+function buildAsteroids(q){
+ const root=$("asteroids");root.innerHTML="";
+ choices=q.o.map((v,i)=>({v,correct:v===q.a}));
+ // Fisher-Yates shuffle so the correct answer is not always in the same position.
+ for(let i=choices.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
+ const positions=[{x:20,y:45},{x:50,y:58},{x:80,y:43}];
+ choices.forEach((ch,i)=>{const el=document.createElement("button");el.className="asteroid";el.type="button";el.textContent=ch.v;el.setAttribute("aria-label","Pilihan "+ch.v);el.style.left=positions[i].x+"%";el.style.top=positions[i].y+"%";el.style.transform="translate(-50%,-50%)";el.dataset.answer=ch.v;el.addEventListener("click",()=>choose(ch,el));root.appendChild(el);});
+}
+function moveShip(x,y){shipX=Math.max(6,Math.min(94,x));shipY=Math.max(25,Math.min(91,y));$("ship").style.left=shipX+"%";$("ship").style.top=shipY+"%";checkCollision();}
+function checkCollision(){if(busy||!$("game").classList.contains("active"))return;const els=[...document.querySelectorAll(".asteroid")];for(const el of els){const r=el.getBoundingClientRect(),s=$("ship").getBoundingClientRect();const sx=s.left+s.width/2,sy=s.top+s.height/2,ax=r.left+r.width/2,ay=r.top+r.height/2;if(Math.hypot(sx-ax,sy-ay)<Math.min(r.width,r.height)*.55){const ch=choices.find(c=>String(c.v)===el.dataset.answer);if(ch)choose(ch,el);break;}}}
+function choose(ch,el){
+ if(busy)return;busy=true;
+ const fb=$("feedback");
+ if(ch.correct){score+=100;answered++;stats();fb.textContent="✨ BENAR! +100 POIN";fb.style.color="#78ffc6";el.style.boxShadow="0 0 35px #6affbd";setTimeout(()=>{question++;loadQuestion();},1150);}
+ else{lives--;stats();fb.textContent="💥 BELUM TEPAT! -1 NYAWA";fb.style.color="#ff829e";el.style.filter="grayscale(1)";el.style.opacity=".35";setTimeout(()=>{if(lives<=0){endGame();}else{busy=false;fb.className="feedback";}},1150);}
+ fb.className="feedback show";
+}
+function completeMission(){
+ $("progressFill").style.width=((mission+1)*3/15*100)+"%";
+ $("missionCongrats").textContent="Hebat, "+name+"!";
+ $("missionMessage").textContent="Kamu menuntaskan "+missions[mission].name+" dengan "+score+" poin. Siap menjelajah lebih jauh?";
+ const chips=$("missionChips");chips.innerHTML="";for(let i=0;i<5;i++){const s=document.createElement("span");s.className="chip "+(i<=mission?"done":"lock");s.textContent=(i<=mission?"✓ ":"🔒 ")+"Misi "+(i+1);chips.appendChild(s);}
+ $("nextMissionBtn").textContent=mission===4?"LIHAT KEMENANGAN 🏆":"BUKA MISI BERIKUTNYA 🚀";
+ show("missionDone");
+}
+function nextMission(){mission++;question=0;if(mission>=5)winGame();else{show("game");loadQuestion();}}
+function winGame(){$("victoryName").textContent="Luar biasa, "+name+"!";$("victoryText").textContent="Kamu berhasil menyelesaikan 5 misi dan menjawab 15 soal pengurangan. Galaksi aman berkat kerja kerasmu!";$("finalScore").textContent=score;show("victory");stopCamera();}
+function endGame(){stopCamera();$("gameOverText").textContent="Tidak apa-apa, "+name+". Kamu sudah berusaha hebat! Tekan coba lagi untuk mengulang petualangan dari awal.";show("gameOver");stopCamera();}
+function resetAll(){stopCamera();$("studentName").value=name;score=0;lives=5;mission=0;question=0;answered=0;stats();show("home");}
+function nudge(dx,dy){moveShip(shipX+dx,shipY+dy);}
+$("startBtn").addEventListener("click",startGame);
+$("studentName").addEventListener("keydown",e=>{if(e.key==="Enter")startGame();});
+$("nextMissionBtn").addEventListener("click",nextMission);
+$("playAgainBtn").addEventListener("click",resetAll);
+$("retryBtn").addEventListener("click",()=>{score=0;lives=5;mission=0;question=0;answered=0;stats();show("game");loadQuestion();});
+$("leftBtn").addEventListener("click",()=>nudge(-7,0));$("rightBtn").addEventListener("click",()=>nudge(7,0));$("upBtn").addEventListener("click",()=>nudge(0,-7));$("downBtn").addEventListener("click",()=>nudge(0,7));
+document.addEventListener("keydown",e=>{if(!$("game").classList.contains("active"))return;const k=e.key.toLowerCase();if(["arrowleft","a"].includes(k)){e.preventDefault();nudge(-4,0)}if(["arrowright","d"].includes(k)){e.preventDefault();nudge(4,0)}if(["arrowup","w"].includes(k)){e.preventDefault();nudge(0,-4)}if(["arrowdown","s"].includes(k)){e.preventDefault();nudge(0,4)}});
+$("stage").addEventListener("pointermove",e=>{if(cameraActive||e.pointerType==="touch")return;const r=$("stage").getBoundingClientRect();moveShip((e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100);});
+$("stage").addEventListener("pointerdown",e=>{if(cameraActive)return;const r=$("stage").getBoundingClientRect();moveShip((e.clientX-r.left)/r.width*100,(e.clientY-r.top)/r.height*100);});
+async function activateCamera(){
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){setCamStatus(false,"Browser tidak mendukung kamera. Gunakan mouse/tombol.");return;}
+ if(typeof Hands==="undefined"){setCamStatus(false,"MediaPipe belum termuat. Periksa koneksi internet.");return;}
+ $("cameraBtn").disabled=true;$("camStatus").textContent="Meminta izin kamera...";
+ try{
+  cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:640,height:480},audio:false});
+  const video=$("camVideo");video.srcObject=cameraStream;await video.play();video.classList.add("visible");
+  hands=new Hands({locateFile:(file)=>"https://cdn.jsdelivr.net/npm/@mediapipe/hands/"+file});
+  hands.setOptions({maxNumHands:1,modelComplexity:1,minDetectionConfidence:.65,minTrackingConfidence:.6});
+  hands.onResults(results=>{
+   if(!cameraActive)return;
+   const lm=results.multiHandLandmarks&&results.multiHandLandmarks[0];
+   if(lm){
+    // Palm center: average of wrist and the four MCP knuckles.
+    const px=(lm[0].x+lm[5].x+lm[9].x+lm[13].x+lm[17].x)/5;
+    const py=(lm[0].y+lm[5].y+lm[9].y+lm[13].y+lm[17].y)/5;
+    moveShip((1-px)*100,py*100);
+    setCamStatus(true,"Kamera aktif • telapak tangan terdeteksi");
+   }else{setCamStatus(true,"Kamera aktif • tunjukkan telapak tangan");}
+  });
+  cameraActive=true;
+  mpCamera=new Camera(video,{onFrame:async()=>{if(cameraActive&&hands)await hands.send({image:video});},width:640,height:480});
+  await mpCamera.start();
+  $("stopCamBtn").disabled=false;
+ }catch(err){console.error(err);stopCamera();setCamStatus(false,"Kamera gagal diaktifkan. Izinkan akses kamera atau gunakan kontrol lain.");$("cameraBtn").disabled=false;}
+}
+function setCamStatus(on,msg){$("camDot").classList.toggle("on",on);$("camStatus").textContent=msg;}
+function stopCamera(){
+ cameraActive=false;
+ try{if(mpCamera&&mpCamera.stop)mpCamera.stop();}catch(e){}
+ if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;}
+ const v=$("camVideo");v.pause();v.srcObject=null;v.classList.remove("visible");
+ hands=null;mpCamera=null;$("cameraBtn").disabled=false;$("stopCamBtn").disabled=true;setCamStatus(false,"Kamera belum aktif");
+}
+$("cameraBtn").addEventListener("click",activateCamera);
+$("stopCamBtn").addEventListener("click",stopCamera);
+stats();
+})();
+</script>
+</body>
+</html>
